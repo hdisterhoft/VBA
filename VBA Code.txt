@@ -1,0 +1,53 @@
+
+Sub Button1_Click()
+Dim work As Worksheet
+For Each work In ActiveWorkbook.Worksheets
+work.Activate
+EndData = work.Cells(Rows.Count, 1).End(xlUp).Row
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "Yearly Change"
+Cells(1, 11).Value = "Percent Change"
+Cells(1, 12).Value = "Total Stock Volume"
+Dim Openn As Double
+Dim Closee As Double
+Dim Year As Double
+Dim Ticker As String
+Dim Percent As Double
+Dim Volume As Double
+Volume = 0
+Dim Row As Double
+Row = 2
+Dim Column As Integer
+Column = 1
+Openn = Cells(2, Column + 2).Value
+Dim i As Long
+
+For i = 2 To EndData
+If Cells(i + 1, Column).Value <> Cells(i, Column).Value Then
+Ticker = Cells(i, Column).Value
+Cells(Row, Column + 8).Value = Ticker
+Closee = Cells(i, Column + 5).Value
+Year = Closee - Openn
+Cells(Row, Column + 9).Value = Year
+If (Openn = 0 And Closee = 0) Then
+Percent = 0
+ElseIf (Openn = 0 And Closee <> 0) Then
+Percent = 1
+Else
+Percent = Year / Openn
+Cells(Row, Column + 10).Value = Percent
+Cells(Row, Column + 10).NumberFormat = "0.00%"
+End If
+Volume = Volume + Cells(i, Column + 6).Value
+Cells(Row, Column + 11).Value = Volume
+Row = Row + 1
+Openn = Cells(i + 1, Column + 2)
+Volume = 0
+Else
+Volume = Volume + Cells(i, Column + 6).Value
+
+End If
+Next i
+Next work
+
+End Sub
